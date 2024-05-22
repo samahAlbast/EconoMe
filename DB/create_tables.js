@@ -1,84 +1,207 @@
-const mysql = require('mysql');
+const { Sequelize, DataTypes } = require('sequelize');
 
-// Create a connection to the MySQL server
-const connection = mysql.createConnection({
-    host: "localhost",
-  user: "root",
-  password: "samah",
-  database: 'econome'
+// Create a connection to the MySQL server using Sequelize
+const sequelize = new Sequelize('econome', 'root', 'samah', {
+    host: 'localhost',
+    dialect: 'mysql'
 });
 
-// Connect to the database
-connection.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL database: ' + err.stack);
-    return;
+// Define the User model
+const User = sequelize.define('User', {
+    username: {
+        type: DataTypes.STRING(50),
+        allowNull: false
+    },
+    email: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        unique: true
+    },
+    password: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+    },
+    firstName: {
+        type: DataTypes.STRING(50),
+        allowNull: true
+    },
+    lastName: {
+        type: DataTypes.STRING(50),
+        allowNull: true
+    },
+    dateOfBirth: {
+        type: DataTypes.DATEONLY,
+        allowNull: true
+    },
+    phoneNumber: {
+        type: DataTypes.STRING(50),
+        allowNull: true
+    },
+    created: {
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.NOW
+    }
+}, {
+    timestamps: false, 
+    freezeTableName: true
+});
+
+// Define the IncomeCategory model
+const IncomeCategory = sequelize.define('IncomeCategory', {
+    name: {
+        type: DataTypes.STRING(100),
+        allowNull: false
+    }
+}, {
+    timestamps: false, 
+    freezeTableName: true
+});
+
+// Define the ExpenseCategory model
+const ExpenseCategory = sequelize.define('ExpenseCategory', {
+    name: {
+        type: DataTypes.STRING(100),
+        allowNull: false
+    }
+}, {
+    timestamps: false, 
+    freezeTableName: true
+});
+
+// Define the IncomeSource model
+const IncomeSource = sequelize.define('IncomeSource', {
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: User,
+            key: 'id'
+        }
+    },
+    categoryId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: IncomeCategory,
+            key: 'id'
+        }
+    },
+    currency: {
+        type: DataTypes.STRING(10),
+        allowNull: false
+    },
+    initialAmount: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false
+    },
+    notes: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    created: {
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.NOW
+    }
+}, {
+    timestamps: false, 
+    freezeTableName: true
+});
+
+// Define the ExpenseTransaction model
+const ExpenseTransaction = sequelize.define('ExpenseTransaction', {
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: User,
+            key: 'id'
+        }
+    },
+    incomeSourceId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: IncomeSource,
+            key: 'id'
+        }
+    },
+    categoryId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: ExpenseCategory,
+            key: 'id'
+        }
+    },
+    amount: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false
+    },
+    date: {
+        type: DataTypes.DATEONLY,
+        allowNull: false
+    },
+    notes: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    created: {
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.NOW
+    }
+}, {
+    timestamps: false, 
+    freezeTableName: true
+});
+
+// Define the Budget model
+const Budget = sequelize.define('Budget', {
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: User,
+      key: 'id'
+    }
+  },
+  categoryId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: ExpenseCategory,
+      key: 'id'
+    }
+  },
+  limit: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false
+  },
+  spent: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false,
+    defaultValue: 0.00
+  },
+  created: {
+    type: DataTypes.DATE,
+    defaultValue: Sequelize.NOW
   }
-  console.log('Connected to MySQL database as id ' + connection.threadId);
+}, {
+  timestamps: false,
+  freezeTableName: true
 });
 
-// Create User table
-const createUserTable = `
-  CREATE TABLE IF NOT EXISTS User (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    firstName VARCHAR(50),
-    lastName VARCHAR(50),
-    dateOfBirth DATE,
-    phoneNumber VARCHAR(50),
-    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  )
-`;
+// Synchronize the models with the database
+(async () => {
+    try {
+        await sequelize.authenticate();
+        console.log('Connection has been established successfully.');
 
-// Create IncomeSource table
-const createIncomeSourceTable = `
-  CREATE TABLE IF NOT EXISTS IncomeSource (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    userId INT NOT NULL,
-    name VARCHAR(100) NOT NULL,
-    currency VARCHAR(10) NOT NULL,
-    initialAmount DECIMAL(10, 2) NOT NULL,
-    notes TEXT,
-    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (userId) REFERENCES User(id)
-  )
-`;
+        await sequelize.sync({ force: true }); // This will drop existing tables and create new ones
+        console.log('Database & tables created!');
 
-// Create Transaction table
-const createTransactionTable = `
-  CREATE TABLE IF NOT EXISTS Transaction (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    userId INT NOT NULL,
-    incomeSourceId INT NOT NULL,
-    amount DECIMAL(10, 2) NOT NULL,
-    date DATE NOT NULL,
-    category VARCHAR(50) NOT NULL,
-    notes TEXT,
-    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (userId) REFERENCES User(id),
-    FOREIGN KEY (incomeSourceId) REFERENCES IncomeSource(id)
-  )
-`;
-
-
-// Execute table creation queries
-connection.query(createUserTable, (err, results) => {
-  if (err) throw err;
-  console.log('User table created');
-});
-
-connection.query(createIncomeSourceTable, (err, results) => {
-  if (err) throw err;
-  console.log('IncomeSource table created');
-});
-
-connection.query(createTransactionTable, (err, results) => {
-  if (err) throw err;
-  console.log('Transaction table created');
-});
-
-
-// Close the connection
-connection.end();
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    } finally {
+        await sequelize.close();
+    }
+})();
