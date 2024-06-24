@@ -10,7 +10,8 @@ interface UserAttributes {
   lastName: string;
   dateOfBirth?: Date;
   phoneNumber?: string;
-  created?: Date;
+  createdAt?: Date;
+  updatedAt?:Date
 }
 
 
@@ -52,9 +53,12 @@ User.init(
       type: DataTypes.STRING(50),
       allowNull: true,
     },
-    created: {
+    createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE
     },
   },
   {

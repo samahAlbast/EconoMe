@@ -1,30 +1,38 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, Optional} from 'sequelize';
 import db from '../config/db.config';
 import User from './User'; 
-import ExpenseCategory from './ExpenseCategory'; 
+import ExpenseCategory from './ExpenseType'; 
 
 interface BudgetAttributes {
+  id: number;
   userId: number;
-  categoryId: number;
+  expenseTypeId: number;
   limit: number;
   spent: number;
-  created?: Date;
+  createdAt?: Date;
+  updatedAt?:Date
 }
+
 
 export class Budget extends Model<BudgetAttributes> {}
 
 Budget.init(
   {
+    id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     userId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
         model: User,
         key: 'id'
       }
     },
-    categoryId: {
-      type: DataTypes.INTEGER,
+    expenseTypeId: {
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
         model: ExpenseCategory,
@@ -40,9 +48,12 @@ Budget.init(
       allowNull: false,
       defaultValue: 0.00,
     },
-    created: {
+    createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE
     },
   },
   {
