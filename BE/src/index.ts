@@ -14,14 +14,6 @@ const app = express();
 const port = 3000;
 
 
-// User.sync({ force: true });
-// ExpenseType.sync({ force: true });
-// IncomeType.sync({ force: true });
-// SavingType.sync({ force: true });
-//Expense.sync({ force: true });
-//Income.sync({ force: true });
-Budget.sync({ force: true });
- //Saving.sync({ force: true });
 
 
 app.listen(port, () => {
