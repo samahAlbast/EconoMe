@@ -8,29 +8,21 @@
    
    You can download them from [Node.js official website](https://nodejs.org/).
 
-3. **Initialize a new Node.js project**
 
-   Run the following command to initialize a new Node.js project:
-   ```sh
-   npm init -y
-    ```
-   
-   This will create a package.json file.
-
-4. **Install TypeScript and related dependencies**
+2. **Install TypeScript and related dependencies**
 
    Install TypeScript, Express, and necessary TypeScript definitions:
     ```sh
     npm install express
     npm install -D @types/express typescript ts-node
     ```
-5. **Generating tsconfig.json**
+3. **Install JWT (JSON Web Tokens)**
 
-    To generate this file, use the following tsc command:
     ```sh
-    npx tsc --init
+    npm install jsonwebtoken
     ```
+4. **Start the development server**
 
-    Once this command is executed, a tsconfig.json file will be created.
-   
-    This file contains the default compiler options. 
+    ```sh
+    npm start
+    ```
