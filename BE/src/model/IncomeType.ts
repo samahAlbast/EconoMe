@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, Optional} from 'sequelize';
 import db from '../config/db.config';
 
 interface IncomeTypeAttributes {
@@ -6,7 +6,13 @@ interface IncomeTypeAttributes {
   name: string;
 }
 
-export class IncomeType extends Model<IncomeTypeAttributes> {}
+
+interface IncomeTypeCreationAttributes extends Optional<IncomeTypeAttributes, 'id'> {}
+
+export class IncomeType extends Model<IncomeTypeAttributes, IncomeTypeCreationAttributes> implements IncomeTypeAttributes {
+  public id!: number;
+  public name!: string;
+}
 
 IncomeType.init(
   {
