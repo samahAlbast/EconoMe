@@ -1,7 +1,5 @@
 # TypeScript with Node.js and Express Setup
 
-## Step-by-Step Setup
-
 1. **Install Node.js and npm**
 
    Make sure you have Node.js and npm installed on your machine.
