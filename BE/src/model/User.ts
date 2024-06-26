@@ -1,4 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
+import bcrypt from 'bcrypt';
 import db from '../config/db.config';
 
 interface UserAttributes {
@@ -11,11 +12,27 @@ interface UserAttributes {
   dateOfBirth?: Date;
   phoneNumber?: string;
   createdAt?: Date;
-  updatedAt?:Date
+  updatedAt?: Date;
 }
 
+interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
 
-export class User extends Model<UserAttributes> {}
+export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
+  public id!: number;
+  public username!: string;
+  public email!: string;
+  public password!: string;
+  public firstName!: string;
+  public lastName!: string;
+  public dateOfBirth?: Date | undefined;
+  public phoneNumber?: string | undefined;
+  public createdAt?: Date | undefined;
+  public updatedAt?: Date | undefined;
+
+  public async checkPassword(password: string): Promise<boolean> {
+    return bcrypt.compare(password, this.password);
+  }
+}
 
 User.init(
   {
@@ -58,14 +75,29 @@ User.init(
       defaultValue: DataTypes.NOW,
     },
     updatedAt: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
     },
   },
   {
     sequelize: db,
     tableName: 'User',
-    timestamps: false, 
+    timestamps: true,
     freezeTableName: true,
+    hooks: {
+      beforeCreate: async (user: User) => {
+        if (user.password) {
+          const salt = await bcrypt.genSalt(10);
+          user.password = await bcrypt.hash(user.password, salt);
+        }
+      },
+      beforeUpdate: async (user: User) => {
+        if (user.password) {
+          const salt = await bcrypt.genSalt(10);
+          user.password = await bcrypt.hash(user.password, salt);
+        }
+      },
+    },
   }
 );
 
