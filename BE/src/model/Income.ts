@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import db from '../config/db.config';
 import User from './User'; 
 import IncomeCategory, { IncomeType } from './IncomeType'; 
@@ -7,14 +7,25 @@ interface IncomeAttributes {
   id: number;
   userId: number;
   incomeTypeId: number;
-  currency: string;
   initialAmount: number;
   notes?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  deleted: boolean;
 }
 
-export class Income extends Model<IncomeAttributes> {}
+interface IncomeCreationAttributes extends Optional<IncomeAttributes, 'id'|'notes'|'createdAt'| 'updatedAt' |'deleted'> {}
+
+export class Income extends Model<IncomeAttributes, IncomeCreationAttributes> implements IncomeAttributes {
+  public id!: number;
+  public userId!: number;
+  public incomeTypeId!: number;
+  public initialAmount!: number;
+  public notes?: string;
+  public createdAt?: Date;
+  public updatedAt?: Date;
+  public deleted!: boolean;
+}
 
 Income.init(
   {
@@ -39,10 +50,6 @@ Income.init(
         key: 'id'
       }
     },
-    currency: {
-      type: DataTypes.STRING(10),
-      allowNull: false,
-    },
     initialAmount: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
@@ -54,6 +61,15 @@ Income.init(
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    deleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false, 
     },
   },
   {

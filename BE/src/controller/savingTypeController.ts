@@ -1,83 +1,78 @@
-import { Request, Response } from "express";
-
-import { IncomeType } from "../model/IncomeType";
+import { Request, Response } from 'express';
+import { SavingType } from '../model/SavingType';
 import { Op } from 'sequelize';
 
-
-class IncomeTypeController {
-    async addIncomeType(req: Request, res: Response) {
+class SavingTypeController {
+    async addSavingType(req: Request, res: Response) {
         try {
-            const incomeType = req.body;
+            const savingType = req.body;
+            const { savingTypeName } = savingType;
 
-            const { incomeTypeName} = incomeType;
+            const isNameAlreadyExist = await SavingType.findOne({ where: { name: savingTypeName } });
 
-            const isNameAllReadyExist = await IncomeType.findOne({ where: { name: incomeTypeName } });
-
-            if (isNameAllReadyExist) {
+            if (isNameAlreadyExist) {
                 res.status(400).json({
                     status: 400,
-                    message: "The income type already exists.",
+                    message: "The saving type already exists.",
                 });
                 return;
             }
 
-            const newIncomeType = await IncomeType.create({
-                name: incomeTypeName
+            const newSavingType = await SavingType.create({
+                name: savingTypeName
             });
 
-            res.status(200).json({
+            res.status(201).json({
                 status: 201,
                 success: true,
-                message: " Income Type created Successfully",
-                user: newIncomeType,
+                message: "Saving Type created successfully",
+                savingType: newSavingType,
             });
         } catch (error: any) {
             console.log(error);
-
             res.status(400).json({
                 status: 400,
                 message: error.message.toString(),
             });
         }
-
     }
     
-    async updateIncomeType(req: Request, res: Response) {
+    async updateSavingType(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            const { incomeTypeName } = req.body;
+            const { savingTypeName } = req.body;
 
-            const incomeType = await IncomeType.findByPk(id);
+            const savingType = await SavingType.findByPk(id);
 
-            if (!incomeType) {
+            if (!savingType) {
                 res.status(404).json({
                     status: 404,
                     success: false,
-                    message: 'Income Type not found',
+                    message: 'Saving Type not found',
                 });
                 return;
             }
 
-            const isNameAlreadyExist = await IncomeType.findOne({ where: { name: incomeTypeName, id: { [Op.ne]: id } } });
+            const isNameAlreadyExist = await SavingType.findOne({ where: { name: savingTypeName, id: { [Op.ne]: id } } });
 
             if (isNameAlreadyExist) {
                 res.status(400).json({
                     status: 400,
                     success: false,
-                    message: 'The income type already exists.',
+                    message: 'The saving type already exists.',
                 });
                 return;
             }
 
-            incomeType.name = incomeTypeName;
+            savingType.name = savingTypeName;
 
-            await incomeType.save();
+            await savingType.save();
 
             res.status(200).json({
                 status: 200,
                 success: true,
-                message: 'Income Type updated successfully',
-                incomeType,
+                message: 'Saving Type updated successfully',
+                savingType,
             });
         } catch (error: any) {
             console.log(error);
@@ -88,28 +83,28 @@ class IncomeTypeController {
         }
     }
 
-    async deleteIncomeType(req: Request, res: Response) {
+    async deleteSavingType(req: Request, res: Response) {
         try {
             const { id } = req.params;
 
-            const incomeType = await IncomeType.findByPk(id);
+            const savingType = await SavingType.findByPk(id);
 
-            if (!incomeType) {
+            if (!savingType) {
                 res.status(404).json({
                     status: 404,
                     success: false,
-                    message: 'Income Type not found',
+                    message: 'Saving Type not found',
                 });
                 return;
             }
             
-            incomeType.deleted = true;
+            savingType.deleted = true;
 
-            await incomeType.save();
+            await savingType.save();
             res.status(200).json({
                 status: 200,
                 success: true,
-                message: 'Income Type marked as deleted successfully',
+                message: 'Saving Type marked as deleted successfully',
             });
         } catch (error: any) {
             console.log(error);
@@ -120,14 +115,14 @@ class IncomeTypeController {
         }
     }
 
-    async getAllNonDeletedIncomeTypes(req: Request, res: Response) {
+    async getAllNonDeletedSavingTypes(req: Request, res: Response) {
         try {
-            const incomeTypes = await IncomeType.findAll({ where: { deleted: false } });
+            const savingTypes = await SavingType.findAll({ where: { deleted: false } });
 
             res.status(200).json({
                 status: 200,
                 success: true,
-                incomeTypes,
+                savingTypes,
             });
         } catch (error: any) {
             console.log(error);
@@ -137,7 +132,6 @@ class IncomeTypeController {
             });
         }
     }
-    
 }
 
-export default new IncomeTypeController();
+export default new SavingTypeController();

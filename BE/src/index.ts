@@ -3,6 +3,10 @@ import bodyParser from 'body-parser';
 import userRoutes from './routes/UserRoutes'; 
 import db from './config/db.config'; 
 import incomeTypeRoutes from './routes/IncomeTypeRoutes';
+import expenseTypeRoutes from './routes/ExpensetypeRoutes';
+import savingTypeRoutes from './routes/SavingTypeRoutes';
+import incomeRoutes from './routes/IncomeRoutes';
+import expenseRoutes from './routes/ExpenseRoutes';
 
 
 const app: Application = express();
@@ -15,6 +19,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Routes
 app.use('/api', userRoutes);
 app.use('/api', incomeTypeRoutes);
+app.use('/api', expenseTypeRoutes);
+app.use('/api', savingTypeRoutes);
+app.use('/api', incomeRoutes);
+app.use('/api', expenseRoutes);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

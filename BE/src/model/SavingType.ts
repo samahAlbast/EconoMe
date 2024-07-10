@@ -1,13 +1,20 @@
 
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model , Optional} from 'sequelize';
 import db from '../config/db.config';
 
 interface SavingTypeAttributes {
   id: number;
   name: string;
+  deleted: boolean;
 }
 
-export class SavingType extends Model<SavingTypeAttributes> {}
+interface SavingTypeCreationAttributes extends Optional<SavingTypeAttributes, 'id'| 'deleted'> {}
+
+export class SavingType extends Model<SavingTypeAttributes, SavingTypeCreationAttributes> implements SavingTypeAttributes {
+  public id!: number;
+  public name!: string;
+  public deleted!: boolean; 
+}
 
 SavingType.init(
   {
@@ -19,6 +26,11 @@ SavingType.init(
     name: {
       type: DataTypes.STRING(100),
       allowNull: false,
+    },
+    deleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false, 
     },
   },
   {
