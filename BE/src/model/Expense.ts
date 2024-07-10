@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model,Optional } from 'sequelize';
 import db from '../config/db.config';
 import User from './User'; 
 import ExpenseCategory from './ExpenseType'; 
@@ -8,13 +8,24 @@ interface ExpenseAttributes {
   userId: number;
   expenseTypeId: number;
   amount: number;
-  date: Date;
   notes?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  deleted: boolean;
 }
 
-export class Expense extends Model<ExpenseAttributes> {}
+interface ExpenseCreationAttributes extends Optional<ExpenseAttributes, 'id'|'notes'|'createdAt'| 'updatedAt' |'deleted'> {}
+
+export class Expense extends Model<ExpenseAttributes, ExpenseCreationAttributes> implements ExpenseAttributes {
+  public id!: number;
+  public userId!: number;
+  public expenseTypeId!: number;
+  public amount!: number;
+  public notes?: string;
+  public createdAt?: Date;
+  public updatedAt?: Date;
+  public deleted!: boolean;
+}
 
 Expense.init(
   {
@@ -43,10 +54,6 @@ Expense.init(
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
     },
-    date: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-    },
     notes: {
       type: DataTypes.TEXT,
       allowNull: true,
@@ -56,7 +63,13 @@ Expense.init(
       defaultValue: DataTypes.NOW,
     },
     updatedAt: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    deleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false, 
     },
   },
   {

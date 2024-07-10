@@ -1,83 +1,78 @@
-import { Request, Response } from "express";
-
-import { IncomeType } from "../model/IncomeType";
+import { Request, Response } from 'express';
+import { ExpenseType } from '../model/ExpenseType';
 import { Op } from 'sequelize';
 
-
-class IncomeTypeController {
-    async addIncomeType(req: Request, res: Response) {
+class ExpenseTypeController {
+    async addExpenseType(req: Request, res: Response) {
         try {
-            const incomeType = req.body;
+            const expenseType = req.body;
+            const { expenseTypeName } = expenseType;
 
-            const { incomeTypeName} = incomeType;
+            const isNameAlreadyExist = await ExpenseType.findOne({ where: { name: expenseTypeName } });
 
-            const isNameAllReadyExist = await IncomeType.findOne({ where: { name: incomeTypeName } });
-
-            if (isNameAllReadyExist) {
+            if (isNameAlreadyExist) {
                 res.status(400).json({
                     status: 400,
-                    message: "The income type already exists.",
+                    message: "The expense type already exists.",
                 });
                 return;
             }
 
-            const newIncomeType = await IncomeType.create({
-                name: incomeTypeName
+            const newExpenseType = await ExpenseType.create({
+                name: expenseTypeName
             });
 
-            res.status(200).json({
+            res.status(201).json({
                 status: 201,
                 success: true,
-                message: " Income Type created Successfully",
-                user: newIncomeType,
+                message: "Expense Type created successfully",
+                expenseType: newExpenseType,
             });
         } catch (error: any) {
             console.log(error);
-
             res.status(400).json({
                 status: 400,
                 message: error.message.toString(),
             });
         }
-
     }
     
-    async updateIncomeType(req: Request, res: Response) {
+    async updateExpenseType(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            const { incomeTypeName } = req.body;
+            const { expenseTypeName } = req.body;
 
-            const incomeType = await IncomeType.findByPk(id);
+            const expenseType = await ExpenseType.findByPk(id);
 
-            if (!incomeType) {
+            if (!expenseType) {
                 res.status(404).json({
                     status: 404,
                     success: false,
-                    message: 'Income Type not found',
+                    message: 'Expense Type not found',
                 });
                 return;
             }
 
-            const isNameAlreadyExist = await IncomeType.findOne({ where: { name: incomeTypeName, id: { [Op.ne]: id } } });
+            const isNameAlreadyExist = await ExpenseType.findOne({ where: { name: expenseTypeName, id: { [Op.ne]: id } } });
 
             if (isNameAlreadyExist) {
                 res.status(400).json({
                     status: 400,
                     success: false,
-                    message: 'The income type already exists.',
+                    message: 'The expense type already exists.',
                 });
                 return;
             }
 
-            incomeType.name = incomeTypeName;
+            expenseType.name = expenseTypeName;
 
-            await incomeType.save();
+            await expenseType.save();
 
             res.status(200).json({
                 status: 200,
                 success: true,
-                message: 'Income Type updated successfully',
-                incomeType,
+                message: 'Expense Type updated successfully',
+                expenseType,
             });
         } catch (error: any) {
             console.log(error);
@@ -88,28 +83,28 @@ class IncomeTypeController {
         }
     }
 
-    async deleteIncomeType(req: Request, res: Response) {
+    async deleteExpenseType(req: Request, res: Response) {
         try {
             const { id } = req.params;
 
-            const incomeType = await IncomeType.findByPk(id);
+            const expenseType = await ExpenseType.findByPk(id);
 
-            if (!incomeType) {
+            if (!expenseType) {
                 res.status(404).json({
                     status: 404,
                     success: false,
-                    message: 'Income Type not found',
+                    message: 'Expense Type not found',
                 });
                 return;
             }
             
-            incomeType.deleted = true;
+            expenseType.deleted = true;
 
-            await incomeType.save();
+            await expenseType.save();
             res.status(200).json({
                 status: 200,
                 success: true,
-                message: 'Income Type marked as deleted successfully',
+                message: 'Expense Type marked as deleted successfully',
             });
         } catch (error: any) {
             console.log(error);
@@ -120,14 +115,14 @@ class IncomeTypeController {
         }
     }
 
-    async getAllNonDeletedIncomeTypes(req: Request, res: Response) {
+    async getAllNonDeletedExpenseTypes(req: Request, res: Response) {
         try {
-            const incomeTypes = await IncomeType.findAll({ where: { deleted: false } });
+            const expenseTypes = await ExpenseType.findAll({ where: { deleted: false } });
 
             res.status(200).json({
                 status: 200,
                 success: true,
-                incomeTypes,
+                expenseTypes,
             });
         } catch (error: any) {
             console.log(error);
@@ -137,7 +132,6 @@ class IncomeTypeController {
             });
         }
     }
-    
 }
 
-export default new IncomeTypeController();
+export default new ExpenseTypeController();
