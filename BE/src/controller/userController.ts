@@ -2,7 +2,12 @@ import { Request, Response } from "express";
 
 import { User } from "../model/User";
 import jwt from 'jsonwebtoken';
+const AUTH_TOKEN_KEY = process.env.AUTH_TOKEN_KEY || 'default_secret';
 
+interface GetUserByOptions {
+    id: string;
+    matchField: 'id' | 'email' | 'username'; 
+  }
 
 class UserController {
     async signUp(req: Request, res: Response) {
@@ -79,13 +84,12 @@ class UserController {
             }
 
             const token = jwt.sign(
-                { _id: isUserExist?.id, email: isUserExist?.email },
-                "YOUR_SECRET",
+                { _id: isUserExist?.id, email: isUserExist?.email , username: isUserExist?.username},
+                AUTH_TOKEN_KEY,
                 {
                     expiresIn: "1d",
                 }
             );
-
             res.status(200).json({
                 status: 200,
                 success: true,
@@ -99,6 +103,27 @@ class UserController {
             });
         }
     }
+
+    async getUserBy(options: GetUserByOptions) {
+        const { id, matchField } = options;
+    
+        try {
+          const user = await User.findOne({
+            where: {
+              [matchField]: id
+            }
+          });
+    
+          if (!user) {
+            return null; 
+          }
+    
+          return user;
+        } catch (error) {
+          console.error('Error retrieving user:', error);
+          throw new Error('Error retrieving user');
+        }
+      }
 }
 
 export default new UserController();
