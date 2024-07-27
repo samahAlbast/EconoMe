@@ -9,8 +9,11 @@ class IncomeTypeController {
         try {
             const incomeType = req.body;
 
-            const { incomeTypeName} = incomeType;
+            const { incomeTypeName } = incomeType;
 
+            if (!incomeType.incomeTypeName || typeof incomeType.incomeTypeName !== 'string') {
+                return res.status(400).json({ status: 400, message: "Income type name is required and must be a string." });
+            }
             const isNameAllReadyExist = await IncomeType.findOne({ where: { name: incomeTypeName } });
 
             if (isNameAllReadyExist) {
@@ -41,12 +44,17 @@ class IncomeTypeController {
         }
 
     }
-    
+
     async updateIncomeType(req: Request, res: Response) {
         try {
             const { id } = req.params;
             const { incomeTypeName } = req.body;
-
+            if (!id || isNaN(Number(id))) {
+                return res.status(400).json({ status: 400, message: "Valid id is required." });
+            }
+            if (!incomeTypeName || typeof incomeTypeName !== 'string') {
+                return res.status(400).json({ status: 400, message: "Income type name is required and must be a string." });
+            }
             const incomeType = await IncomeType.findByPk(id);
 
             if (!incomeType) {
@@ -91,7 +99,10 @@ class IncomeTypeController {
     async deleteIncomeType(req: Request, res: Response) {
         try {
             const { id } = req.params;
-
+            
+            if (!id || isNaN(Number(id))) {
+                return res.status(400).json({ status: 400, message: "Valid id is required." });
+            }
             const incomeType = await IncomeType.findByPk(id);
 
             if (!incomeType) {
@@ -102,7 +113,7 @@ class IncomeTypeController {
                 });
                 return;
             }
-            
+
             incomeType.deleted = true;
 
             await incomeType.save();
@@ -137,7 +148,7 @@ class IncomeTypeController {
             });
         }
     }
-    
+
 }
 
 export default new IncomeTypeController();

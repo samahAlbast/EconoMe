@@ -6,6 +6,11 @@ class SavingTypeController {
     async addSavingType(req: Request, res: Response) {
         try {
             const savingType = req.body;
+
+            if (!savingType.savingTypeName || typeof savingType.savingTypeName !== 'string') {
+                return res.status(400).json({ status: 400, message: "Saving type name is required and must be a string." });
+            }
+
             const { savingTypeName } = savingType;
 
             const isNameAlreadyExist = await SavingType.findOne({ where: { name: savingTypeName } });
@@ -42,6 +47,10 @@ class SavingTypeController {
             const { id } = req.params;
             const { savingTypeName } = req.body;
 
+            if (!req.body.savingTypeName || typeof req.body.savingTypeName !== 'string') {
+                return res.status(400).json({ status: 400, message: "Saving type name is required and must be a string." });
+            }
+            
             const savingType = await SavingType.findByPk(id);
 
             if (!savingType) {

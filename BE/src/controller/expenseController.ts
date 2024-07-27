@@ -9,6 +9,16 @@ class ExpenseController {
         try {
             const { userId, expenseTypeId, amount, notes } = req.body;
 
+            if (!userId || isNaN(Number(userId))) {
+                return res.status(400).json({ status: 400, message: "Valid userId is required." });
+            }
+            if (!expenseTypeId || isNaN(Number(expenseTypeId))) {
+                return res.status(400).json({ status: 400, message: "Valid expenseTypeId is required." });
+            }
+            if (!amount || isNaN(Number(amount)) || amount <= 0) {
+                return res.status(400).json({ status: 400, message: "Valid amount is required." });
+            }
+
             const totalExpenseResult = await Expense.sum('amount', {
                 where: { deleted: false, userId: userId },
             });
@@ -54,7 +64,20 @@ class ExpenseController {
     async updateExpense(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            const { userId, expenseTypeId, amount, date, notes } = req.body;
+            const { userId, expenseTypeId, amount, notes } = req.body;
+
+            if (!id || isNaN(Number(id))) {
+                return res.status(400).json({ status: 400, message: "Valid id is required." });
+            }
+            if (userId && isNaN(Number(userId))) {
+                return res.status(400).json({ status: 400, message: "Valid userId is required." });
+            }
+            if (expenseTypeId && isNaN(Number(expenseTypeId))) {
+                return res.status(400).json({ status: 400, message: "Valid expenseTypeId is required." });
+            }
+            if (amount && (isNaN(Number(amount)) || amount <= 0)) {
+                return res.status(400).json({ status: 400, message: "Valid amount is required." });
+            }
 
             const expense = await Expense.findByPk(id);
 
@@ -70,6 +93,8 @@ class ExpenseController {
             expense.expenseTypeId = expenseTypeId;
             expense.amount = amount;
             expense.notes = notes;
+            expense.updatedAt = new Date();
+
 
             await expense.save();
 
@@ -91,7 +116,9 @@ class ExpenseController {
     async deleteExpense(req: Request, res: Response) {
         try {
             const { id } = req.params;
-
+            if (!id || isNaN(Number(id))) {
+                return res.status(400).json({ status: 400, message: "Valid id is required." });
+            }
             const expense = await Expense.findByPk(id);
 
             if (!expense) {

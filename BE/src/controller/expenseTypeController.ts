@@ -8,6 +8,9 @@ class ExpenseTypeController {
             const expenseType = req.body;
             const { expenseTypeName } = expenseType;
 
+            if (!expenseTypeName || typeof expenseTypeName !== 'string') {
+                return res.status(400).json({ status: 400, message: "Valid expenseTypeName is required." });
+            }
             const isNameAlreadyExist = await ExpenseType.findOne({ where: { name: expenseTypeName } });
 
             if (isNameAlreadyExist) {
@@ -42,6 +45,12 @@ class ExpenseTypeController {
             const { id } = req.params;
             const { expenseTypeName } = req.body;
 
+            if (!id || isNaN(Number(id))) {
+                return res.status(400).json({ status: 400, message: "Valid id is required." });
+            }
+            if (!expenseTypeName || typeof expenseTypeName !== 'string') {
+                return res.status(400).json({ status: 400, message: "Valid expenseTypeName is required." });
+            }
             const expenseType = await ExpenseType.findByPk(id);
 
             if (!expenseType) {
@@ -86,7 +95,10 @@ class ExpenseTypeController {
     async deleteExpenseType(req: Request, res: Response) {
         try {
             const { id } = req.params;
-
+            
+            if (!id || isNaN(Number(id))) {
+                return res.status(400).json({ status: 400, message: "Valid id is required." });
+            }
             const expenseType = await ExpenseType.findByPk(id);
 
             if (!expenseType) {

@@ -14,6 +14,28 @@ class UserController {
         try {
             const user = req.body;
 
+            if (!user.username || typeof user.username !== 'string') {
+                return res.status(400).json({ status: 400, message: "Username is required and must be a string." });
+            }
+            if (!user.email || typeof user.email !== 'string') {
+                return res.status(400).json({ status: 400, message: "Email is required and must be a string." });
+            }
+            if (!user.password || typeof user.password !== 'string') {
+                return res.status(400).json({ status: 400, message: "Password is required and must be a string." });
+            }
+            if (!user.firstName || typeof user.firstName !== 'string') {
+                return res.status(400).json({ status: 400, message: "First name is required and must be a string." });
+            }
+            if (!user.lastName || typeof user.lastName !== 'string') {
+                return res.status(400).json({ status: 400, message: "Last name is required and must be a string." });
+            }
+            if (user.dateOfBirth && isNaN(Date.parse(user.dateOfBirth))) {
+                return res.status(400).json({ status: 400, message: "Date of birth must be a valid date." });
+            }
+            if (user.phoneNumber && typeof user.phoneNumber !== 'string') {
+                return res.status(400).json({ status: 400, message: "Phone number must be a string." });
+            }
+
             const { username, email, password, firstName, lastName, dateOfBirth, phoneNumber } = user;
 
             const isUserNameAllReadyExist = await User.findOne({ where: { username: username } });
@@ -58,6 +80,12 @@ class UserController {
         try {
             const user = req.body;
 
+            if (!user.username || typeof user.username !== 'string') {
+                return res.status(400).json({ status: 400, message: "Username is required and must be a string." });
+            }
+            if (!user.password || typeof user.password !== 'string') {
+                return res.status(400).json({ status: 400, message: "Password is required and must be a string." });
+            }
             const { username, password } = user;
 
             const isUserExist = await User.findOne({ where: { username: username } });
@@ -106,7 +134,13 @@ class UserController {
 
     async getUserBy(options: GetUserByOptions) {
         const { id, matchField } = options;
-    
+        if (!id || typeof id !== 'string') {
+            throw new Error('ID is required and must be a string.');
+        }
+        if (!['id', 'email', 'username'].includes(matchField)) {
+            throw new Error('MatchField must be one of "id", "email", or "username".');
+        }
+
         try {
           const user = await User.findOne({
             where: {
