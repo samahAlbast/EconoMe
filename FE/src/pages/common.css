@@ -1,0 +1,145 @@
+/* common.css */
+
+/* Color Variables */
+:root {
+    --primary-color: #0288d1;
+    --secondary-color: #0277bd;
+    --background-color: #e0f7fa;
+    --box-background-color: rgba(255, 255, 255, 0.9);
+    --text-color: #000;
+    --error-color: red;
+  }
+  
+  /* Global Styles */
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background: linear-gradient(var(--background-color), #b3e5fc);
+  }
+  
+  /* Box Styles */
+  .box {
+    width: 400px;
+    padding: 20px;
+    background: var(--box-background-color);
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+  }
+  
+  /* Heading */
+  h2 {
+    margin-bottom: 15px;
+    color: var(--text-color);
+    text-align: center;
+  }
+  
+  /* Input Fields */
+  input[type="text"], input[type="password"], .inputBox {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: var(--text-color);
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: transparent;
+    outline: none;
+  }
+  
+  input:focus {
+    border-color: var(--primary-color);
+  }
+  
+  /* Labels */
+  label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px 0;
+    font-size: 16px;
+    color: var(--text-color);
+    pointer-events: none;
+    transition: 0.5s;
+  }
+  
+  input:focus ~ label,
+  input:valid ~ label {
+    top: -20px;
+    color: var(--primary-color);
+    font-size: 12px;
+  }
+  
+  /* Buttons */
+  input[type="button"], .inputButton {
+    border: none;
+    background: var(--primary-color);
+    color: white;
+    padding: 12px 24px;
+    margin-top: 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  input[type="button"]:hover, .inputButton:hover {
+    background: var(--secondary-color);
+  }
+  
+  /* Error Labels */
+  .errorLabel {
+    color: var(--error-color);
+    font-size: 12px;
+  }
+  
+  /* Layout Containers */
+  .mainContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .titleContainer {
+    display: flex;
+    flex-direction: column;
+    font-size: 64px;
+    font-weight: bolder;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .resultContainer, .historyItem {
+    display: flex;
+    flex-direction: row;
+    width: 400px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .historyContainer {
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+    align-items: center;
+    flex-grow: 5;
+    justify-content: flex-start;
+  }
+  
+  .buttonContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 260px;
+  }
+  
+  .inputContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  

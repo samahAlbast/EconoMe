@@ -1,0 +1,86 @@
+/* General page styling */
+html {
+    height: 100%;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background: linear-gradient(#e0f7fa, #b3e5fc); 
+  }
+  
+  /* Styling for the registration box */
+  .register-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    padding: 40px;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.5); 
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+  }
+  
+  .register-box h2 {
+    margin: 0 0 30px;
+    padding: 0;
+    color: #000; 
+    text-align: center;
+  }
+  
+  /* Styling for input containers */
+  .register-box .user-box {
+    position: relative;
+  }
+  
+  .register-box .user-box input {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #000;
+    margin-bottom: 30px;
+    border: none;
+    border-bottom: 1px solid #000;
+    outline: none;
+    background: transparent;
+  }
+  
+  .register-box .user-box label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #000;
+    pointer-events: none;
+    transition: .5s;
+  }
+  
+  .register-box .user-box input:valid ~ label {
+    top: -20px;
+    left: 0;
+    color: #0288d1;
+    font-size: 12px;
+  }
+  
+  /* Styling for error messages */
+  .errorLabel {
+    color: red;
+    font-size: 12px;
+  }
+  
+  /* Styling for the submit button */
+  .inputButton {
+    border: none;
+    background: #0288d1;
+    color: white;
+    padding: 12px 24px;
+    margin: 8px;
+    font-size: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
