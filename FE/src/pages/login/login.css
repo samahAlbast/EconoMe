@@ -1,16 +1,5 @@
-/* General page styling */
-html {
-  height: 100%;
-}
+@import url('../../assets/common.css');  
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  background: linear-gradient(#e0f7fa, #b3e5fc); 
-}
-
-/* Styling for the login box */
 .login-box {
   position: absolute;
   top: 50%;
@@ -31,60 +20,6 @@ body {
   text-align: center;
 }
 
-/* Styling for input containers */
-.login-box .input-container {
-  position: relative;
-}
-
-.login-box .input-container input {
-  width: 100%;
-  padding: 10px 0;
-  font-size: 16px;
-  color: #000;
-  margin-bottom: 30px;
-  border: none;
-  border-bottom: 1px solid #000;
-  outline: none;
-  background: transparent;
-}
-
-.login-box .input-container label {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 10px 0;
-  font-size: 16px;
-  color: #000;
-  pointer-events: none;
-  transition: .5s;
-}
-
-.login-box .input-container input:valid ~ label {
-  top: -20px;
-  left: 0;
-  color: #0288d1;
-  font-size: 12px;
-}
-
-/* Styling for buttons */
-.inputButton {
-  border: none;
-  background: #0288d1;
-  color: white;
-  padding: 12px 24px;
-  margin: 8px;
-  font-size: 15px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* Styling for error messages */
-.errorLabel {
-  color: red;
-  font-size: 12px;
-}
-
-/* Link styling for form submission */
 .login-box form a {
   position: relative;
   display: inline-block;
@@ -178,6 +113,11 @@ body {
   background: linear-gradient(360deg, transparent, #0288d1);
   animation: btn-anim4 1s linear infinite;
   animation-delay: .75s;
+}
+.login-box .button-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 @keyframes btn-anim4 {

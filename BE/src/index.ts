@@ -2,43 +2,20 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import userRoutes from './routes/UserRoutes'; 
 import db from './config/db.config'; 
-import BASE_PREFIX from './config/config'; 
 import incomeTypeRoutes from './routes/IncomeTypeRoutes';
 import expenseTypeRoutes from './routes/ExpenseTypeRoutes';
 import savingTypeRoutes from './routes/SavingTypeRoutes';
 import incomeRoutes from './routes/IncomeRoutes';
 import expenseRoutes from './routes/ExpenseRoutes';
-import userController from './controller/userController';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-
+import checkAuthToken from './middleware/authMiddleware'
+import cors from 'cors';
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
-const AUTH_TOKEN_KEY = process.env.AUTH_TOKEN_KEY || 'default_secret';
+const BASE_PREFIX = "/api"
 
-const checkAuthToken = async (req: Request, res: Response, next: NextFunction) => {
-  const auth_token = req.headers["access-token"] as string;
-  try {
-    if (!auth_token) {
-      throw new Error('Unauthorized');
-    }
-    console.log("1")
-    const decodedUserInfo = jwt.verify(auth_token, AUTH_TOKEN_KEY) as JwtPayload;
-    const user = await userController.getUserBy({ id: decodedUserInfo.username, matchField: 'username' });
-    
-    if (!user) {
-      throw new Error('Unauthorized User');
-    }
-    console.log("2")
+app.use(cors());
 
-  
-    return next();
-  } catch (error) {
-    console.error(error); 
-    return res.status(403).json({ error: 'Unauthorized' });
-  }
-};
-console.log("I DIE")
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './register.css';
-import './common.css';
+import { register } from '../../Services/userService'; 
+import axios from 'axios';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -22,6 +23,8 @@ const Register = () => {
     confirmPasswordError: ''
   });
 
+  const [generalError, setGeneralError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +32,7 @@ const Register = () => {
     setFormData(prevData => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
     setErrors({
       usernameError: '',
@@ -80,14 +83,25 @@ const Register = () => {
     }
 
     if (!hasErrors) {
-      // Handle successful registration here
-      navigate('/welcome'); // Replace '/welcome' with your desired route
+      try {
+        const data = await register(username, email, password, firstName, lastName);
+        setSuccessMessage(data.message);
+        navigate('/login'); 
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          setGeneralError(error.response?.data.message || 'An error occurred during registration');
+        } else {
+          setGeneralError('An unexpected error occurred');
+        }
+      }
     }
   };
 
   return (
     <div className="register-box">
       <h2>Register</h2>
+      {generalError && <div className="error">{generalError}</div>}
+      {successMessage && <div className="successMessage">{successMessage}</div>}
       <form onSubmit={handleSubmit}>
         <div className="user-box">
           <input
@@ -98,7 +112,7 @@ const Register = () => {
             onChange={handleChange}
             className="inputField"
           />
-          <label className="errorLabel">{errors.usernameError}</label>
+          <label className="error">{errors.usernameError}</label>
         </div>
         <div className="user-box">
           <input
@@ -109,7 +123,7 @@ const Register = () => {
             onChange={handleChange}
             className="inputField"
           />
-          <label className="errorLabel">{errors.firstNameError}</label>
+          <label className="error">{errors.firstNameError}</label>
         </div>
         <div className="user-box">
           <input
@@ -120,7 +134,7 @@ const Register = () => {
             onChange={handleChange}
             className="inputField"
           />
-          <label className="errorLabel">{errors.lastNameError}</label>
+          <label className="error">{errors.lastNameError}</label>
         </div>
         <div className="user-box">
           <input
@@ -131,7 +145,7 @@ const Register = () => {
             onChange={handleChange}
             className="inputField"
           />
-          <label className="errorLabel">{errors.emailError}</label>
+          <label className="error">{errors.emailError}</label>
         </div>
         <div className="user-box">
           <input
@@ -142,7 +156,7 @@ const Register = () => {
             onChange={handleChange}
             className="inputField"
           />
-          <label className="errorLabel">{errors.passwordError}</label>
+          <label className="error">{errors.passwordError}</label>
         </div>
         <div className="user-box">
           <input
@@ -153,9 +167,11 @@ const Register = () => {
             onChange={handleChange}
             className="inputField"
           />
-          <label className="errorLabel">{errors.confirmPasswordError}</label>
+          <label className="error">{errors.confirmPasswordError}</label>
         </div>
-        <button className="inputButton" type="submit">Register</button>
+        <div className="button-container">
+          <button type="submit" className="inputButton">Register</button>
+        </div>
       </form>
     </div>
   );
