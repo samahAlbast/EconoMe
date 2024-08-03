@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './login.css';
-import { login } from '../../Services/userService'; // Import the login service
+import { login } from '../../services/userService'; // Import the login service
 import axios from 'axios';
 
 const Login = () => {
@@ -39,7 +39,7 @@ const Login = () => {
       const data = await login(username, password);
       localStorage.setItem('authToken', data.token);
       setSuccessMessage(data.message);
-      navigate('/home');
+      navigate('/income');
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         setGeneralError(error.response?.data.message || 'An error occurred during login');

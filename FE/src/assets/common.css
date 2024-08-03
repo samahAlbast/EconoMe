@@ -88,41 +88,96 @@ body {
   align-items: flex-start;
 }
 
-.types-list,
 .add-type {
   width: 45%;
+  margin-left: 10px;
 }
 
 .types-list {
   margin-bottom: 20px;
-  margin-left: 20px;
   text-align: left;
+  width: 45%;
+  margin-left: 120px;
 
 }
 
 .types-list ul {
   margin-bottom: 30px;
   list-style-type: none;
+  margin-left: 120px;
   padding: 0;
 }
 
 .types-list li {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
-  padding: 10px;
+  align-items: flex-start;
+  padding: 20px;
   border-bottom: 1px solid #ddd;
 }
 
+.types-list span {
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+.types-list span strong {
+  font-weight: bold;
+  color: #0288d1;
+}
+
+.types-list input[type="text"] {
+  width: calc(100% - 22px);
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.types-list button {
+  background-color: #0288d1;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.types-list button:hover {
+  background-color: #0277bd;
+}
+
+.types-list button.cancel {
+  background-color: #f44336;
+}
+
+.types-list button.cancel:hover {
+  background-color: #c62828;
+}
+
+.types-list h2 {
+  margin-left: 120px;
+
+}
 .add-type {
   margin-top: 20px;
-  margin-left: 10px;
+  margin-left: 150px;
   text-align: left;
 }
 
 .add-type h2 {
   margin-bottom: 10px;
-  margin-left: 10px;
+  margin-left: 120px;
+
+}
+.add-type button {
+  margin-bottom: 10px;
+  margin-left: 120px;
 
 }
 
@@ -131,4 +186,27 @@ body {
   font-size: 16px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  margin-left: 120px;
+
+}
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group select,
+.form-group input,
+.form-group textarea{
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.form-group text {
+  margin-left: -10;
 }

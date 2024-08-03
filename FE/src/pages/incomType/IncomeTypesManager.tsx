@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { addIncomeType, updateIncomeType, deleteIncomeType, getAllNonDeletedIncomeTypes } from '../../Services/incomTypeService';
+import { addIncomeType, updateIncomeType, deleteIncomeType, getAllNonDeletedIncomeTypes } from '../../services/incomTypeService';
 import { IncomeType } from './incomType';
 import './incomeType.css';
 

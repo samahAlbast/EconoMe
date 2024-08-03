@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { addExpenseType, updateExpenseType, deleteExpenseType, getAllNonDeletedExpenseTypes } from '../../Services/expenseTypeService';
+import { addExpenseType, updateExpenseType, deleteExpenseType, getAllNonDeletedExpenseTypes } from '../../services/expenseTypeService';
 import { ExpenseType } from './expenseType';
 import './expenseType.css';
 
