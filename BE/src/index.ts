@@ -15,12 +15,9 @@ const PORT = process.env.PORT || 3000;
 const BASE_PREFIX = "/api"
 
 app.use(cors());
-
-// Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Routes
 app.use(BASE_PREFIX, userRoutes);
 app.use(BASE_PREFIX, checkAuthToken, incomeTypeRoutes);
 app.use(BASE_PREFIX, checkAuthToken, expenseTypeRoutes);
@@ -28,13 +25,11 @@ app.use(BASE_PREFIX, checkAuthToken, savingTypeRoutes);
 app.use(BASE_PREFIX, checkAuthToken, incomeRoutes);
 app.use(BASE_PREFIX, checkAuthToken, expenseRoutes);
 
-// Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
 
-// Database connection and server start
 db.sync({ force: false })
   .then(() => {
     console.log('Database connected');
