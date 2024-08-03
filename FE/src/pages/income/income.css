@@ -1,0 +1,5 @@
+@import url('../../assets/common.css');
+
+.add-income, .total-available-income{
+    margin-left: 120px;
+}

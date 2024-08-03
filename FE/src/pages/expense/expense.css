@@ -1,0 +1,14 @@
+@import url('../../assets/common.css');  
+
+.expense-manager {
+    font-family: Arial, sans-serif;
+    margin-left: 120px;
+  }
+
+  .total-available-income{
+    margin-left: 120px;
+  }
+
+  .add-expense{
+    margin-left: 120px;
+  }
