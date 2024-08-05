@@ -12,8 +12,11 @@ Each directory contains detailed README.md files providing setup and technical g
   - Specific instructions and technical details are available in the backend directory's README.md: [Backend README](https://github.com/samahAlbast/EconoMe/blob/master/BE/README.md)
 ## What's inside
 1- Users can add income types such as salary, freelance work, etc.
+
 2- Users can add expense types such as groceries, shopping, etc.
+
 3- Users can add their income and track their available money.
+
 4- Users can track their expense transactions. 
 
 ## ERD
