@@ -75,9 +75,9 @@ export const getIncome = async (id: number) => {
   }
 };
 
-export const getAllNonDeletedIncomes = async () => {
+export const getAllNonDeletedIncomes = async (userId: number) => {
   try {
-    const response = await apiClient.get('/getAllNonDeletedIncomes');
+    const response = await apiClient.get(`/getAllNonDeletedIncomes/${userId}`);
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
@@ -88,9 +88,9 @@ export const getAllNonDeletedIncomes = async () => {
   }
 };
 
-export const getTotalAvailableIncome = async () => {
+export const getTotalAvailableIncome = async (userId: number) => {
     try {
-      const response = await apiClient.get('/getTotalAvailableIncome');
+      const response = await apiClient.get(`/getTotalAvailableIncome/${userId}`);
       return response.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

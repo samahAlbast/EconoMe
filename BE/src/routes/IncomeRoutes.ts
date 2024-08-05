@@ -7,7 +7,7 @@ router.post('/addIncome', incomeController.addIncome);
 router.post('/updateIncome/:id', incomeController.updateIncome);
 router.delete('/deleteIncome/:id', incomeController.deleteIncome);
 router.get('/getIncome/:id', incomeController.getIncome);
-router.get('/getAllNonDeletedIncomes', incomeController.getAllNonDeletedIncomes);
-router.get('/getTotalAvailableIncome', incomeController.getTotalAvailableIncome);
+router.get('/getAllNonDeletedIncomes/:userId', incomeController.getAllNonDeletedIncomes);
+router.get('/getTotalAvailableIncome/:userId', incomeController.getTotalAvailableIncome);
 
 export default router;

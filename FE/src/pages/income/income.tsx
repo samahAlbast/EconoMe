@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getAllNonDeletedIncomeTypes } from '../../services/incomTypeService';
 import { getAllNonDeletedIncomes, addIncome, updateIncome, deleteIncome, getTotalAvailableIncome } from '../../services/incomeService';
 import { IncomeType } from '../incomType/incomType';
+import { getSessionUser } from '../../services/userService';
 import './income.css';
 
 interface Income {
@@ -27,13 +28,23 @@ const AddIncome = () => {
   const [editingDescription, setEditingDescription] = useState('');
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [userId, setUserId] = useState<number>(1)
 
   useEffect(() => {
+    fetchUserId();
     fetchIncomeTypes();
     fetchUserIncomes();
     fetchTotalAvailableIncome();
   }, []);
 
+  const fetchUserId = async () => {
+    try {
+      const userId = await getSessionUser();  
+      setUserId(userId);
+    } catch (error) {
+      setError('Error fetching user information.');
+    }
+  };
   const fetchIncomeTypes = async () => {
     try {
       const data = await getAllNonDeletedIncomeTypes();
@@ -45,7 +56,7 @@ const AddIncome = () => {
 
   const fetchUserIncomes = async () => {
     try {
-      const data = await getAllNonDeletedIncomes();
+      const data = await getAllNonDeletedIncomes(userId);
       setIncomes(data.incomes);
     } catch (error) {
       setError('Error fetching user incomes.');
@@ -54,7 +65,7 @@ const AddIncome = () => {
 
   const fetchTotalAvailableIncome = async () => {
     try {
-      const data = await getTotalAvailableIncome();
+      const data = await getTotalAvailableIncome(userId);
       setTotalAvailableIncome(data.totalAvailableIncome);
     } catch (error) {
       setError('Error fetching total available income.');
@@ -104,7 +115,7 @@ const AddIncome = () => {
       });
       setSuccessMessage('Income updated successfully.');
       fetchUserIncomes();
-      fetchTotalAvailableIncome(); // Update total available income
+      fetchTotalAvailableIncome(); 
       setEditingId(null);
       setEditingAmount('');
       setEditingDescription('');

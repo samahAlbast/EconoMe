@@ -173,7 +173,8 @@ class IncomeController {
 
     async getAllNonDeletedIncomes(req: Request, res: Response) {
         try {
-            const incomes = await Income.findAll({ where: { deleted: false } });
+            const { userId } = req.params;
+            const incomes = await Income.findAll({ where: { deleted: false,  userId: userId} });
 
             res.status(200).json({
                 status: 200,

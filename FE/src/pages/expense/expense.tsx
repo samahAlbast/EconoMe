@@ -3,6 +3,7 @@ import { getAllNonDeletedExpenseTypes } from '../../services/expenseTypeService'
 import { getAllExpenses, addExpense, updateExpense, deleteExpense } from '../../services/expenseService';
 import { getTotalAvailableIncome } from '../../services/incomeService';
 import { ExpenseType } from '../expenseType/expenseType';
+import { getSessionUser } from '../../services/userService';
 import './expense.css';
 
 interface Expense {
@@ -28,12 +29,23 @@ const ExpenseManager: React.FC = () => {
   const [editingDescription, setEditingDescription] = useState('');
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [userId, setUserId] = useState<number | 1>(1);
 
   useEffect(() => {
+    fetchUserId();
     fetchExpenseTypes();
     fetchExpenses();
     fetchTotalAvailableIncome();
   }, []);
+
+  const fetchUserId = async () => {
+    try {
+      const userId = await getSessionUser();  
+      setUserId(userId);
+    } catch (error) {
+      setError('Error fetching user information.');
+    }
+  };
 
   const fetchExpenseTypes = async () => {
     try {
@@ -55,7 +67,7 @@ const ExpenseManager: React.FC = () => {
 
   const fetchTotalAvailableIncome = async () => {
     try {
-      const data = await getTotalAvailableIncome();
+      const data = await getTotalAvailableIncome(userId);
       setTotalAvailableIncome(data.totalAvailableIncome);
     } catch (error) {
       setError('Error fetching total available income.');
@@ -83,7 +95,7 @@ const ExpenseManager: React.FC = () => {
         expenseTypeId: selectedExpenseType,
         amount: Number(amount),
         notes: description,
-        userId: 1, // Assuming userId is 1 for now
+        userId: userId, // Assuming userId is 1 for now
       });
       setSuccessMessage('Expense added successfully.');
       fetchExpenses();

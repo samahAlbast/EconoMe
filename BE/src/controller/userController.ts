@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 
 import { User } from "../model/User";
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+
 const AUTH_TOKEN_KEY = process.env.AUTH_TOKEN_KEY || 'default_secret';
 
 interface GetUserByOptions {
@@ -158,6 +159,27 @@ class UserController {
           throw new Error('Error retrieving user');
         }
       }
+
+    async getSessionUserId(req: Request, res: Response) {
+        const auth_token = req.headers.authorization?.split(' ')[1] as string;
+        console.log(auth_token)
+        try {
+            console.log("1")
+
+            const decodedUserInfo = jwt.verify(auth_token, AUTH_TOKEN_KEY) as JwtPayload;
+            console.log(decodedUserInfo)
+            console.log(decodedUserInfo._id)
+            const userId = decodedUserInfo._id
+            if (!userId) {
+                return res.status(404).json({ message: 'User not found.' });
+            }
+
+            res.status(200).json({ userId: userId });
+        } catch (error: any) {
+            res.status(500).json({ message: error.message });
+        }
+    }
+
 }
 
 export default new UserController();

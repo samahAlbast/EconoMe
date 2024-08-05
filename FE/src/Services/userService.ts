@@ -39,3 +39,20 @@ export const register = async (username: string, email: string, password: string
         }
       }
   };
+
+  export const getSessionUser = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/getSessionUserId`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        },
+      });
+      return response.data.userId;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        throw error.response?.data || new Error('An error occurred');
+      } else {
+        throw new Error('An unexpected error occurred');
+      }
+    }
+  };
